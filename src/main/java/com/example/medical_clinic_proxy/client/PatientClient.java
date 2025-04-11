@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "app", url = "http://localhost:8080")
+@FeignClient(value = "app", url = "http://app:8080")
 public interface PatientClient {
 
     @GetMapping("/visits/{patientEmail}")
