@@ -4,7 +4,7 @@ import com.example.medical_clinic_proxy.model.PageContent;
 import com.example.medical_clinic_proxy.model.dto.DoctorDTO;
 import com.example.medical_clinic_proxy.model.dto.PatientDTO;
 import com.example.medical_clinic_proxy.model.dto.VisitDTO;
-import com.example.medical_clinic_proxy.service.PatientService;
+import com.example.medical_clinic_proxy.service.VisitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,9 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-test.properties")
-public class PatientControllerTest {
+public class VisitControllerTest {
     @MockitoBean
-    private PatientService visitClientService;
+    private VisitService visitClientService;
     @Autowired
     private MockMvc mockMvc;
 
