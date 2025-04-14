@@ -1,10 +1,11 @@
 package com.example.medical_clinic_proxy.controller;
 
 import com.example.medical_clinic_proxy.model.PageContent;
+import com.example.medical_clinic_proxy.model.command.ReserveVisitCommand;
+import com.example.medical_clinic_proxy.model.command.VisitDayCommand;
 import com.example.medical_clinic_proxy.model.dto.VisitDTO;
 import com.example.medical_clinic_proxy.service.VisitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,25 +16,26 @@ import org.springframework.web.bind.annotation.*;
 public class VisitController {
     private final VisitService visitService;
 
-    @GetMapping("/{patientEmail}")
-    public PageContent<VisitDTO> getVisitsByPatient(@PathVariable("patientEmail") String patientEmail, Pageable pageable) {
+    @GetMapping
+    public PageContent<VisitDTO> getVisitsByPatient(@RequestParam(required = false) String patientEmail, Pageable pageable) {
         return visitService.getVisitsByPatient(patientEmail, pageable);
     }
 
-    @PatchMapping("/{patientEmail}/{visitId}")
-    public VisitDTO reserveVisit(@PathVariable("patientEmail") String email, @PathVariable("visitId") String id) {
-        return visitService.reserveVisit(email, id);
+    @PatchMapping("/reservation")
+    public VisitDTO reserveVisit(@RequestBody ReserveVisitCommand reserveVisitCommand) {
+        return visitService.reserveVisit(reserveVisitCommand);
     }
 
-    @GetMapping("/available/{doctorEmail}")
-    public PageContent<VisitDTO> getAvailableVisitsByDoctor(@PathVariable("doctorEmail") String doctorEmail, Pageable pageable) {
+    @GetMapping("/available")
+    public PageContent<VisitDTO> getAvailableVisitsByDoctor(@RequestParam(required = false) String doctorEmail, Pageable pageable) {
         return visitService.getAvailableVisitsByDoctor(doctorEmail, pageable);
     }
 
-
-//
-//    @GetMapping("/{doctorEmail}")
-//    public PageContent<VisitDTO> getAvailableDoctorVisits(Pageable pageable) {
-//        return visitClientService.getAvailableVisits(pageable);
-//    }
+    @GetMapping("/available/specialization")
+    public PageContent<VisitDTO> getAvailableVisitsByDayAndSpecialization(
+            @RequestParam(required = false) String specialization,
+            @RequestParam(required = false) VisitDayCommand visitDayCommand,
+            Pageable pageable) {
+        return visitService.getAvailableVisitsByDayAndSpecialization(specialization, visitDayCommand, pageable);
+    }
 }

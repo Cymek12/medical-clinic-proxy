@@ -1,10 +1,12 @@
 package com.example.medical_clinic_proxy.controller;
 
 import com.example.medical_clinic_proxy.model.PageContent;
+import com.example.medical_clinic_proxy.model.command.ReserveVisitCommand;
 import com.example.medical_clinic_proxy.model.dto.DoctorDTO;
 import com.example.medical_clinic_proxy.model.dto.PatientDTO;
 import com.example.medical_clinic_proxy.model.dto.VisitDTO;
 import com.example.medical_clinic_proxy.service.VisitService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,8 +24,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.medical_clinic_proxy.TestDataBuilder.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,9 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("classpath:application-test.properties")
 public class VisitControllerTest {
     @MockitoBean
-    private VisitService visitClientService;
+    private VisitService visitService;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void getVisitsByPatient_returnPageContentDTO() throws Exception {
@@ -47,8 +53,9 @@ public class VisitControllerTest {
                 buildVisitDTO(2L, buildDoctorDTO(2L, "doctor2@gmail.com"), patientDTO)
         );
         PageContent<VisitDTO> pageContentDTO = new PageContent<>(2L, 0, 1, visits);
-        when(visitClientService.getVisitsByPatient(patientEmail, pageable)).thenReturn(pageContentDTO);
-        mockMvc.perform(get("/patients/{patientEmail}", patientEmail)
+        when(visitService.getVisitsByPatient(patientEmail, pageable)).thenReturn(pageContentDTO);
+        mockMvc.perform(get("/visits")
+                        .param("patientEmail", "patient@gmail.com")
                         .param("size", "5")
                         .param("page", "0")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -88,36 +95,19 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.content[1].patientDTO.birthday").value("2000-02-17"));
     }
 
-    private VisitDTO buildVisitDTO(Long id, DoctorDTO doctorDTO, PatientDTO patientDTO) {
-        return VisitDTO.builder()
-                .id(id)
-                .startDateTime(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(16, 0, 0)))
-                .endDateTime(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(18, 0, 0)))
-                .doctorDTO(doctorDTO)
-                .patientDTO(patientDTO)
-                .build();
-    }
-
-    private DoctorDTO buildDoctorDTO(Long id, String email) {
-        return DoctorDTO.builder()
-                .id(id)
-                .firstName("jan")
-                .lastName("kowalski")
-                .email(email)
-                .specialization("kardiolog")
-                .institutionIds(new ArrayList<>())
-                .build();
-    }
-
-    private PatientDTO buildPatientDTO(Long id, String email) {
-        return PatientDTO.builder()
-                .id(id)
-                .email(email)
-                .idCardNo("123")
-                .firstName("jan")
-                .lastName("kowalski")
-                .phoneNumber("123456789")
-                .birthday(LocalDate.of(2000, 2, 17))
-                .build();
-    }
+//    @Test
+//    void reserveVisit_returnVisitDTO() throws Exception {
+//        ReserveVisitCommand reserveVisitCommand = buildreserveVisitCommand();
+//        PatientDTO patientDTO = buildPatientDTO(1L, "patient@gmail.com");
+//        DoctorDTO doctorDTO = buildDoctorDTO(1L, "doctor@gmail.com");
+//        VisitDTO visitDTO = buildVisitDTO(1L, doctorDTO, patientDTO);
+//        when(visitService.reserveVisit(reserveVisitCommand)).thenReturn(visitDTO);
+//        mockMvc.perform(patch("/reservation")
+//                        .content(objectMapper.writeValueAsString(reserveVisitCommand))
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect()
+//
+//
+//    }
 }
