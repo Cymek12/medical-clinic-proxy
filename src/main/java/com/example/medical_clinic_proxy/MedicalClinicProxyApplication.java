@@ -12,11 +12,3 @@ public class MedicalClinicProxyApplication {
 	}
 
 }
-
-/*
-Ja jako pacjent chciałbym miec możliwość:
-Zobaczenia wszystkich swoich wizyt
-Zapisania się na wizytę
-Sprawdzenia wszystkich dostępnych wizyt dla danego doktora
-Sprawdzenia wszystkich dostepnych terminow wizyt na dany dzien z danej specjalizacji doktora
- */

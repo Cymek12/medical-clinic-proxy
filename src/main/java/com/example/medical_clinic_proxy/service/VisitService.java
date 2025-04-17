@@ -1,6 +1,6 @@
 package com.example.medical_clinic_proxy.service;
 
-import com.example.medical_clinic_proxy.client.VisitClient;
+import com.example.medical_clinic_proxy.client.MedicalClinicClient;
 import com.example.medical_clinic_proxy.model.PageContent;
 import com.example.medical_clinic_proxy.model.command.ReserveVisitCommand;
 import com.example.medical_clinic_proxy.model.command.VisitDayCommand;
@@ -12,22 +12,13 @@ import org.springframework.data.domain.Pageable;
 @Service
 @RequiredArgsConstructor
 public class VisitService {
-    private final VisitClient visitClient;
+    private final MedicalClinicClient medicalClinicClient;
 
-    public PageContent<VisitDTO> getVisitsByPatient(String patientEmail, Pageable pageable) {
-        return visitClient.getVisitsByPatient(patientEmail, pageable);
+    public PageContent<VisitDTO> getAvailableVisitsProcessor(Pageable pageable, String patientEmail, String doctorEmail, String specialization, VisitDayCommand visitDayCommand) {
+        return medicalClinicClient.getAvailableVisits(pageable, patientEmail, doctorEmail, specialization, visitDayCommand);
     }
 
     public VisitDTO reserveVisit(ReserveVisitCommand reserveVisitCommand) {
-        return visitClient.reserveVisit(reserveVisitCommand);
+        return medicalClinicClient.reserveVisit(reserveVisitCommand);
     }
-
-    public PageContent<VisitDTO> getAvailableVisitsByDoctor(String doctorEmail, Pageable pageable) {
-        return visitClient.getAvailableVisitsByDoctor(doctorEmail, pageable);
-    }
-
-    public PageContent<VisitDTO> getAvailableVisitsByDayAndSpecialization(String specialization, VisitDayCommand visitDayCommand, Pageable pageable) {
-        return visitClient.getAvailableVisitsByDayAndSpecialization(specialization, visitDayCommand, pageable);
-    }
-
 }
