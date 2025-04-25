@@ -15,8 +15,8 @@ public class TestDataBuilder {
     public static VisitDTO buildVisitDTO(Long id, DoctorDTO doctorDTO, PatientDTO patientDTO) {
         return VisitDTO.builder()
                 .id(id)
-                .startDateTime(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(16, 0, 0)))
-                .endDateTime(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(18, 0, 0)))
+                .startDateTime(LocalDateTime.of(LocalDate.of(2030, 1, 1), LocalTime.of(16, 0, 0)))
+                .endDateTime(LocalDateTime.of(LocalDate.of(2030, 1, 1), LocalTime.of(18, 0, 0)))
                 .doctorDTO(doctorDTO)
                 .patientDTO(patientDTO)
                 .build();
@@ -51,5 +51,4 @@ public class TestDataBuilder {
                 .visitId("1")
                 .build();
     }
-
 }
